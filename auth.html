@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in | FinOps Sentinel</title>
+<meta name="description" content="Create a FinOps Sentinel account or log in.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050505;--panel:rgba(18,16,14,.82);--line:rgba(255,176,46,.22);--line2:rgba(255,255,255,.1);
+  --amber:#ffb02e;--ember:#ff6a2b;--rose:#e23d6b;--text:#f3efe8;--mute:#a59f93;--ok:#5fd39a;--bad:#ff6b6b;
+  --head:'Sora','Segoe UI',system-ui,sans-serif;--body:'Manrope','Segoe UI',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  --grad:linear-gradient(100deg,#ffb02e,#ff6a2b 60%,#e23d6b);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--text);font:400 16px/1.6 var(--body)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:6px}
+a{color:inherit}
+.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.shell{display:grid;grid-template-columns:1.05fr 1fr;min-height:100vh}
+
+/* left brand panel */
+.side{position:relative;overflow:hidden;padding:44px clamp(28px,5vw,64px);display:flex;flex-direction:column;border-right:1px solid var(--line2)}
+#bg{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.side>*{position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:12px;font:800 1.2rem var(--head);text-decoration:none}
+.brand svg{width:32px;height:32px}
+.pitch{margin:auto 0;max-width:520px;padding:40px 0}
+.pitch h1{font:800 clamp(2rem,3.6vw,3.1rem)/1.1 var(--head);letter-spacing:-.025em}
+.pitch p{color:#cfc8ba;margin:18px 0 30px;font-size:1.05rem;max-width:46ch}
+.perks{list-style:none;display:grid;gap:14px}
+.perks li{display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:center;font-size:.96rem;color:#d9d3c7}
+.perks i{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:rgba(255,176,46,.12);color:var(--amber);font-style:normal}
+.perks i svg{width:20px;height:20px}
+.perks b{color:var(--text);font-weight:700}
+.quote{margin-top:34px;border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:16px 18px;font:500 .82rem var(--mono);color:#ffd9a3;backdrop-filter:blur(8px)}
+.quote span{color:#7d776c}
+.foot{font-size:.84rem;color:var(--mute)}
+
+/* right form panel */
+.main{display:flex;flex-direction:column;padding:32px clamp(20px,5vw,64px);background:radial-gradient(ellipse at 80% 0%,rgba(255,106,43,.1),transparent 60%)}
+.top{display:flex;justify-content:flex-end}
+.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--mute);font-weight:600;font-size:.92rem;padding:8px 12px;border-radius:10px;border:1px solid transparent}
+.back:hover{color:var(--amber);border-color:var(--line2)}
+.back svg{width:16px;height:16px}
+.card{width:100%;max-width:440px;margin:auto;padding:24px 0}
+.card h2{font:800 2rem/1.15 var(--head);letter-spacing:-.02em}
+.card .sub{color:var(--mute);margin:8px 0 26px}
+.card .sub button{background:none;border:0;color:var(--amber);font:inherit;font-weight:700;cursor:pointer;padding:0}
+.card .sub button:hover{text-decoration:underline}
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,.06);padding:4px;border-radius:12px;margin-bottom:26px}
+.tabs button{flex:1;border:0;background:none;padding:10px;border-radius:9px;font:700 .94rem var(--body);color:var(--mute);cursor:pointer;transition:background .2s,color .2s}
+.tabs button[aria-selected=true]{background:var(--amber);color:#1a0d02}
+.f{margin-bottom:16px}
+.f label{display:flex;justify-content:space-between;font-size:.86rem;font-weight:600;margin-bottom:6px;color:#d9d3c7}
+.f label small{font-weight:500;color:var(--mute)}
+.inp{position:relative}
+.inp input,.inp select{width:100%;padding:12px 14px;border:1px solid var(--line2);border-radius:10px;font:inherit;font-size:.98rem;background:#120f0c;color:var(--text);transition:border-color .2s,box-shadow .2s}
+.inp input::placeholder{color:#6f6a60}
+.inp input:focus,.inp select:focus{border-color:var(--amber);outline:none;box-shadow:0 0 0 3px rgba(255,176,46,.18)}
+.inp input[aria-invalid=true]{border-color:var(--bad)}
+.eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--mute);cursor:pointer;padding:6px;border-radius:6px;display:grid}
+.eye:hover{color:var(--amber)}
+.eye svg{width:18px;height:18px}
+.inp.pw input{padding-right:44px}
+.meter{display:flex;gap:5px;margin-top:8px}
+.meter i{flex:1;height:4px;border-radius:3px;background:rgba(255,255,255,.1);transition:background .3s}
+.mtxt{font-size:.8rem;color:var(--mute);margin-top:5px;min-height:1.2em}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.plans label{display:block;margin:0;cursor:pointer}
+.plans input{position:absolute;opacity:0;pointer-events:none}
+.plans span{display:block;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;background:#120f0c;transition:border-color .2s,background .2s}
+.plans b{display:block;font:700 .92rem var(--head);color:var(--text)}
+.plans em{font-style:normal;font-size:.8rem;color:var(--mute)}
+.plans input:checked+span{border-color:var(--amber);background:rgba(255,176,46,.1)}
+.plans input:focus-visible+span{outline:2px solid var(--amber);outline-offset:2px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:4px 0 16px;font-size:.88rem}
+.chk{display:flex;gap:8px;align-items:center;color:#d9d3c7;cursor:pointer}
+.chk input{accent-color:var(--amber);width:16px;height:16px}
+.link{background:none;border:0;color:var(--amber);font:inherit;font-weight:600;cursor:pointer;padding:0}
+.link:hover{text-decoration:underline}
+.msg{min-height:22px;font-size:.9rem;margin:2px 0 12px;color:var(--bad)}
+.msg.ok{color:var(--ok)}
+.btn{width:100%;border:0;cursor:pointer;border-radius:11px;padding:13px 20px;font:800 1rem var(--body);background:var(--grad);color:#1a0d02;box-shadow:0 10px 32px -10px rgba(255,106,43,.8);transition:box-shadow .2s,transform .1s;display:flex;justify-content:center;align-items:center;gap:10px}
+.btn:hover{box-shadow:0 12px 40px -6px rgba(255,106,43,.95)}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.7;cursor:wait}
+.spin{width:16px;height:16px;border:2.5px solid rgba(26,13,2,.3);border-top-color:#1a0d02;border-radius:50%;animation:sp .7s linear infinite;display:none}
+.btn[disabled] .spin{display:block}
+@keyframes sp{to{transform:rotate(360deg)}}
+.terms{font-size:.8rem;color:var(--mute);margin-top:14px;text-align:center}
+.note{margin-top:26px;font-size:.8rem;color:#7d776c;text-align:center;border-top:1px solid var(--line2);padding-top:16px}
+.hide{display:none!important}
+.pane{animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.done{text-align:center}
+.done .tick{width:74px;height:74px;border-radius:50%;margin:0 auto 18px;background:rgba(95,211,154,.12);border:1px solid rgba(95,211,154,.4);display:grid;place-items:center;color:var(--ok)}
+.done .tick svg{width:34px;height:34px}
+
+@media(max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{border-right:0;border-bottom:1px solid var(--line2);padding:22px 20px}
+  .pitch,.side .foot{display:none}
+  .main{padding:20px 16px 40px}
+}
+@media(max-width:420px){.plans{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <canvas id="bg" aria-hidden="true"></canvas>
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#ffb02e"/><stop offset="1" stop-color="#ff6a2b"/></linearGradient></defs><path d="M16 2 4 7v8c0 7.5 5 13 12 15 7-2 12-7.5 12-15V7z" fill="url(#lg)"/><path d="M10 19l4-4 3 3 5-6" stroke="#1a0d02" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      FinOps Sentinel
+    </a>
+    <div class="pitch">
+      <h1>Find the waste.<br><span class="grad">Fix it safely.</span></h1>
+      <p>Your account keeps every scan, report and approved script in one place, across AWS, Azure and Google Cloud.</p>
+      <ul class="perks">
+        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></i><span><b>Savings tracker</b> that shows money recovered each month</span></li>
+        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg></i><span><b>Approval workflow</b> so nothing runs without a human</span></li>
+        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></i><span><b>No cloud credentials</b>; works from anonymized exports</span></li>
+      </ul>
+      <div class="quote"><span>$ sentinel scan billing_oct.csv</span><br>14 findings &middot; potential savings <b style="color:#5fd39a">$3,917 / month</b></div>
+    </div>
+    <div class="foot">Team Code Catalyst &middot; DEX26020 &middot; Sathyabama Institute of Science and Technology</div>
+  </aside>
+
+  <main class="main">
+    <div class="top"><a class="back" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Back to website</a></div>
+
+    <div class="card">
+      <!-- signed-in state -->
+      <div id="already" class="pane done hide">
+        <div class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></div>
+        <h2>You're signed in</h2>
+        <p class="sub" id="alreadyTxt"></p>
+        <a class="btn" href="index.html" style="text-decoration:none">Continue to website</a>
+        <p class="terms"><button class="link" id="switchAcct">Use a different account</button></p>
+      </div>
+
+      <div id="forms">
+        <div class="tabs" role="tablist" aria-label="Account">
+          <button role="tab" id="tab-signup" aria-controls="signupForm" aria-selected="true" data-tab="signup">Sign up</button>
+          <button role="tab" id="tab-login" aria-controls="loginForm" aria-selected="false" data-tab="login">Log in</button>
+        </div>
+
+        <form id="signupForm" class="pane" role="tabpanel" aria-labelledby="tab-signup" novalidate>
+          <h2>Create your account</h2>
+          <p class="sub">Start free. No credit card needed. Already a member? <button type="button" data-go="login">Log in</button></p>
+          <div class="f"><label for="sName">Full name</label><div class="inp"><input id="sName" autocomplete="name" placeholder="Priya Raman"></div></div>
+          <div class="f"><label for="sEmail">Work email</label><div class="inp"><input id="sEmail" type="email" autocomplete="email" placeholder="you@company.com"></div></div>
+          <div class="f"><label for="sOrg">Organization <small>Optional</small></label><div class="inp"><input id="sOrg" autocomplete="organization" placeholder="Company or college"></div></div>
+          <div class="f"><label for="sPass">Password <small>8+ characters</small></label>
+            <div class="inp pw"><input id="sPass" type="password" autocomplete="new-password"><button type="button" class="eye" aria-label="Show password" data-eye="sPass"></button></div>
+            <div class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="mtxt" id="mtxt"></div>
+          </div>
+          <div class="f"><label id="planLbl">Membership</label>
+            <div class="plans" role="radiogroup" aria-labelledby="planLbl">
+              <label><input type="radio" name="plan" value="Starter" checked><span><b>Starter</b><em>$0</em></span></label>
+              <label><input type="radio" name="plan" value="Team"><span><b>Team</b><em>$49/mo</em></span></label>
+              <label><input type="radio" name="plan" value="Enterprise"><span><b>Enterprise</b><em>$199/mo</em></span></label>
+            </div>
+          </div>
+          <div class="msg" id="sMsg" role="alert"></div>
+          <button class="btn" type="submit"><span class="spin"></span>Create account</button>
+          <p class="terms">By creating an account you agree to the demo terms of this hackathon prototype.</p>
+        </form>
+
+        <form id="loginForm" class="pane hide" role="tabpanel" aria-labelledby="tab-login" novalidate>
+          <h2>Welcome back</h2>
+          <p class="sub">Log in to see your scans and savings. New here? <button type="button" data-go="signup">Create an account</button></p>
+          <div class="f"><label for="lEmail">Email</label><div class="inp"><input id="lEmail" type="email" autocomplete="email" placeholder="you@company.com"></div></div>
+          <div class="f"><label for="lPass">Password</label>
+            <div class="inp pw"><input id="lPass" type="password" autocomplete="current-password"><button type="button" class="eye" aria-label="Show password" data-eye="lPass"></button></div></div>
+          <div class="row"><label class="chk"><input type="checkbox" id="remember" checked>Keep me signed in</label><button type="button" class="link" id="forgot">Forgot password?</button></div>
+          <div class="msg" id="lMsg" role="alert"></div>
+          <button class="btn" type="submit"><span class="spin"></span>Log in</button>
+        </form>
+      </div>
+      <p class="note">Prototype: accounts are saved only in this browser. Passwords are stored as a SHA-256 hash, never as plain text.</p>
+    </div>
+  </main>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* background */
+(function(){
+  const c=$('#bg'),x=c.getContext('2d');let W,H,P=[];
+  function size(){const r=c.parentElement.getBoundingClientRect();W=c.width=r.width;H=c.height=r.height;
+    const n=Math.min(70,Math.floor(W*H/14000));P=[];for(let i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.7+.7,h:Math.random()<.25})}
+  function frame(){x.fillStyle='#050505';x.fillRect(0,0,W,H);
+    const g=x.createRadialGradient(W*.2,H*.85,0,W*.2,H*.85,W);g.addColorStop(0,'rgba(255,106,43,.18)');g.addColorStop(1,'rgba(255,106,43,0)');x.fillStyle=g;x.fillRect(0,0,W,H);
+    for(const p of P){if(!still){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1}}
+    for(let i=0;i<P.length;i++){const a=P[i];for(let j=i+1;j<P.length;j++){const b=P[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<140){x.strokeStyle='rgba(255,176,46,'+(.2*(1-d/140))+')';x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke()}}
+      x.globalAlpha=a.h?.95:.6;x.fillStyle=a.h?'#ff6a2b':'#ffb02e';x.beginPath();x.arc(a.x,a.y,a.r,0,7);x.fill();x.globalAlpha=1}
+    if(!still)requestAnimationFrame(frame)}
+  addEventListener('resize',()=>{size();if(still)frame()});size();frame();
+})();
+
+/* storage shared with index.html */
+const store={
+  get users(){try{return JSON.parse(localStorage.getItem('fs_users')||'[]')}catch(e){return[]}},
+  set users(v){try{localStorage.setItem('fs_users',JSON.stringify(v))}catch(e){}},
+  get session(){try{return localStorage.getItem('fs_session')}catch(e){return null}},
+  set session(v){try{v?localStorage.setItem('fs_session',v):localStorage.removeItem('fs_session')}catch(e){}}
+};
+async function hash(t){
+  if(!(window.crypto&&crypto.subtle))return btoa(unescape(encodeURIComponent(t)));
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));
+  return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+
+/* tabs, driven by the URL so links like auth.html?mode=login work */
+function setTab(t,push){
+  $$('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));
+  $('#signupForm').classList.toggle('hide',t!=='signup');$('#loginForm').classList.toggle('hide',t!=='login');
+  document.title=(t==='signup'?'Sign up':'Log in')+' | FinOps Sentinel';
+  $('#sMsg').textContent=$('#lMsg').textContent='';$('#lMsg').className='msg';
+  if(push){const q=new URLSearchParams(location.search);q.set('mode',t);history.replaceState(null,'','?'+q)}
+  setTimeout(()=>(t==='signup'?$('#sName'):$('#lEmail')).focus(),30);
+}
+$$('.tabs button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab,true));
+$$('[data-go]').forEach(b=>b.onclick=()=>setTab(b.dataset.go,true));
+$('.tabs').addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){const t=$('#tab-signup').getAttribute('aria-selected')==='true'?'login':'signup';setTab(t,true);$('#tab-'+t).focus()}});
+
+/* show / hide password */
+const EYE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+      NOEYE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.9 17.9A10.8 10.8 0 0112 20c-7 0-11-8-11-8a19.7 19.7 0 015.1-5.9M9.9 4.2A10 10 0 0112 4c7 0 11 8 11 8a19.8 19.8 0 01-2.2 3.3M1 1l22 22"/></svg>';
+$$('.eye').forEach(b=>{b.innerHTML=EYE;b.onclick=()=>{const i=$('#'+b.dataset.eye),show=i.type==='password';i.type=show?'text':'password';b.innerHTML=show?NOEYE:EYE;b.setAttribute('aria-label',show?'Hide password':'Show password')}});
+
+/* password strength */
+$('#sPass').addEventListener('input',e=>{
+  const v=e.target.value;let s=0;if(v.length>=8)s++;if(/[A-Z]/.test(v)&&/[a-z]/.test(v))s++;if(/\d/.test(v))s++;if(/[^A-Za-z0-9]/.test(v)||v.length>=14)s++;
+  const col=['#ff6b6b','#ff6a2b','#ffb02e','#5fd39a'],lab=['Too weak','Fair','Good','Strong'];
+  $$('.meter i').forEach((m,i)=>m.style.background=v&&i<Math.max(1,s)?col[Math.max(0,s-1)]:'');
+  $('#mtxt').textContent=v?(v.length<8?'Use at least 8 characters':lab[Math.max(0,s-1)]):'';
+});
+
+$$('form input').forEach(i=>i.addEventListener('input',()=>{if(i.getAttribute('aria-invalid')){i.removeAttribute('aria-invalid');i.form.querySelector('.msg').textContent=''}}));
+const bad=(id,m,el)=>{$(m).textContent=el;$$('#'+id+' input').forEach(i=>i.removeAttribute('aria-invalid'));return false};
+const flag=i=>{i.setAttribute('aria-invalid','true');i.focus()};
+async function busy(form,fn){const b=form.querySelector('.btn');b.disabled=true;try{await new Promise(r=>setTimeout(r,450));await fn()}finally{b.disabled=false}}
+
+$('#signupForm').addEventListener('submit',e=>{
+  e.preventDefault();const f=e.target,m=$('#sMsg');
+  f.querySelectorAll('input').forEach(i=>i.removeAttribute('aria-invalid'));
+  const name=$('#sName').value.trim(),email=$('#sEmail').value.trim().toLowerCase(),pass=$('#sPass').value;
+  if(!name){m.textContent='Enter your full name.';return flag($('#sName'))}
+  if(!/^\S+@\S+\.\S+$/.test(email)){m.textContent='Enter a valid email address.';return flag($('#sEmail'))}
+  if(pass.length<8){m.textContent='Use a password with at least 8 characters.';return flag($('#sPass'))}
+  if(store.users.some(u=>u.email===email)){m.innerHTML='That email is already registered. <button type="button" class="link" id="toLogin">Log in instead</button>';
+    $('#toLogin').onclick=()=>{setTab('login',true);$('#lEmail').value=email;$('#lPass').focus()};return flag($('#sEmail'))}
+  busy(f,async()=>{
+    const plan=f.querySelector('input[name=plan]:checked').value,users=store.users;
+    users.push({name,email,org:$('#sOrg').value.trim(),plan,pass:await hash(pass),joined:new Date().toISOString()});
+    store.users=users;store.session=email;location.href='index.html?welcome=new';
+  });
+});
+$('#loginForm').addEventListener('submit',e=>{
+  e.preventDefault();const f=e.target,m=$('#lMsg');m.className='msg';
+  f.querySelectorAll('input').forEach(i=>i.removeAttribute('aria-invalid'));
+  const email=$('#lEmail').value.trim().toLowerCase(),pass=$('#lPass').value;
+  if(!/^\S+@\S+\.\S+$/.test(email)){m.textContent='Enter a valid email address.';return flag($('#lEmail'))}
+  if(!pass){m.textContent='Enter your password.';return flag($('#lPass'))}
+  busy(f,async()=>{
+    const h=await hash(pass),u=store.users.find(x=>x.email===email&&x.pass===h);
+    if(!u){m.textContent='Email or password is incorrect.';flag($('#lPass'));return}
+    store.session=email;location.href='index.html?welcome=back';
+  });
+});
+$('#forgot').onclick=()=>{const m=$('#lMsg');m.className='msg ok';m.textContent='Password reset arrives with email support in the MVP. For this prototype, create a new account.'};
+
+/* initial state */
+(function(){
+  const q=new URLSearchParams(location.search),plan=q.get('plan');
+  if(plan){const r=document.querySelector(`input[name=plan][value="${CSS.escape(plan)}"]`);if(r)r.checked=true}
+  const u=store.users.find(x=>x.email===store.session);
+  if(u){$('#forms').classList.add('hide');$('#already').classList.remove('hide');
+    $('#alreadyTxt').textContent=`Signed in as ${u.name} (${u.email}) on the ${u.plan} plan.`;
+    $('#switchAcct').onclick=()=>{store.session=null;$('#already').classList.add('hide');$('#forms').classList.remove('hide');setTab(q.get('mode')==='login'?'login':'signup')};
+    return}
+  setTab(q.get('mode')==='login'?'login':'signup');
+})();
+</script>
+</body>
+</html>
